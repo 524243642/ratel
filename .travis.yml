@@ -1,0 +1,16 @@
+language: python
+python:
+    - "3.6"
+    - "3.4"
+    - "2.7"
+
+before_install:
+    - pip install -r requirements.txt
+
+script:
+    - flake8 --max-line-length=110 *.py
+    - nosetests -v
+      --with-coverage --cover-package=boost_collections
+
+after_success:
+    - coveralls

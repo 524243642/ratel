@@ -1,0 +1,15 @@
+# coding: utf-8
+ERR = -1
+OK = 0
+
+ZSKIPLIST_MAXLEVEL = 32
+ZSKIPLIST_P = 0.25
+
+ZADD_NONE = 0
+ZADD_INCR = 1 << 0
+ZADD_NX = 1 << 1
+
+ZADD_NOP = 1 << 3
+ZADD_NAN = 1 << 4
+ZADD_ADDED = 1 << 5
+ZADD_UPDATED = 1 << 6
