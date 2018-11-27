@@ -20,7 +20,7 @@ Skip Lists are data structure that can be used in place of balanced trees. They
 are easier to implement and generally faster. This library uses redis skip lists to
 implement SortedSet data types for Python.
 
-SortedSet is implemented in Python 
+SortedSet is implemented in Python
 
 Here is a few examples:
 ```python
@@ -45,11 +45,20 @@ zset_obj.zrange(0, -1, True)
 # zrevrange
 zset_obj.zrevrange(0, 1, True)
 ```
+# Compatibility
+* Python 2.7, 3.4+
 
 # Installation
 ```
 pip install ratel
 ```
+or
+```
+https://github.com/524243642/ratel
+cd ratel
+python setup.py install
+```
+
 
 # Time Complexity
 ZsetObj Operations   | Average Case
@@ -61,3 +70,9 @@ zscore               | O(1)
 zcard                | O(1)
 zrange               | O(log N)
 zrevrange            | O(log N)
+
+# License
+MIT
+
+# Contributing
+Welcome to feedback and improvements.Please submit a pull request!

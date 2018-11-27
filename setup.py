@@ -5,7 +5,8 @@ with open("README.md", "r") as h:
 
 setup(
     name='ratel',
-    version='0.2.17',
+    keywords='ratel',
+    version='0.2.18',
     description='Sorted data structure implementation by using skiplist and dict with Python',
     long_description=README,
     long_description_content_type="text/markdown",
@@ -16,10 +17,12 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: Python Software Foundation License',
-        'Programming Language :: Python :: 3.6',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 2.7'
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
     packages=find_packages(exclude=['tests*']),
     test_suite='tests',

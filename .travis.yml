@@ -1,16 +1,18 @@
 language: python
 python:
-    - "3.6"
-    - "3.4"
-    - "2.7"
+    - 3.7-dev
+    - 3.6
+    - 3.5
+    - 3.4
+    - 2.7
 
 before_install:
     - pip install -r requirements.txt
+    - pip install -r requirements-dev.txt
 
 script:
-    - flake8 --max-line-length=110 *.py
-    - nosetests -v
-      --with-coverage --cover-package=boost_collections
+    - tox
 
 after_success:
     - coveralls
+    - codecov
