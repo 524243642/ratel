@@ -20,6 +20,9 @@ class TestZskiplist(unittest.TestCase):
         zsl.zsl_delete(10, 'b')
         self.assertEqual(1, zsl.length)
 
+        retval, node = zsl.zsl_delete(10, 'c')
+        self.assertEqual(0, retval)
+
     def test_zsl_get_element_by_rank(self):
         zsl = self.zsl
         zsl.zsl_insert(3, 'c')
@@ -27,6 +30,9 @@ class TestZskiplist(unittest.TestCase):
 
         self.assertIsNotNone(ele)
         self.assertEqual('c', ele.ele)
+
+        ele = zsl.zsl_get_element_by_rank(4)
+        self.assertIsNone(ele)
 
 
 if __name__ == '__main__':
