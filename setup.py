@@ -12,7 +12,10 @@ def read(fname):
 
 
 def desc():
-    return read('README.md')
+    try:
+        return read('README.md')
+    except:
+        return ''
 
 
 setup(
@@ -20,7 +23,7 @@ setup(
     keywords='ratel',
     version='0.2.18',
     description='Sorted data structure implementation by using skiplist and dict with Python',
-    long_description=open('README.md').read(),
+    long_description=desc(),
     long_description_content_type="text/markdown",
     url='https://github.com/524243642/ratel',
     license='MIT',
