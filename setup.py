@@ -1,14 +1,26 @@
+import os
+
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as h:
-    README = h.read()
+
+def fpath(name):
+    return os.path.join(os.path.dirname(__file__), name)
+
+
+def read(fname):
+    return open(fpath(fname)).read()
+
+
+def desc():
+    return read('README.md')
+
 
 setup(
     name='ratel',
     keywords='ratel',
     version='0.2.18',
     description='Sorted data structure implementation by using skiplist and dict with Python',
-    long_description=README,
+    long_description=desc(),
     long_description_content_type="text/markdown",
     url='https://github.com/524243642/ratel',
     license='MIT',
