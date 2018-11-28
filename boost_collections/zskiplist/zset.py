@@ -77,7 +77,7 @@ class Zset(object):
             return 1, ZADD_UPDATED, score
         else:
             znode = self.zsl.zsl_insert(score=score, ele=ele)
-            assert dict_.setdefault(ele, znode.score) != 0
+            assert dict_.setdefault(ele, znode.score) == score
             return 1, ZADD_ADDED, znode.score
 
     def zset_del(self, ele):

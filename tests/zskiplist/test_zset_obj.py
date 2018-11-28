@@ -25,6 +25,9 @@ class TestZsetObj(unittest.TestCase):
 
         self.assertRaises(AssertionError, zset_obj.zadd, ZsetNode('e', NaN))
 
+        zset_obj = ZsetObj()
+        zset_obj.zadd(ZsetNode('a', 0))
+
     def test_zrem(self):
         zset_obj = self.zset_obj
         zset_obj.zrem('a')
