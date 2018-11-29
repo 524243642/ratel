@@ -1,5 +1,4 @@
 # coding: utf-8
-import numpy
 
 from boost_collections.zskiplist.zskiplist_level import ZskiplistLevel
 
@@ -11,4 +10,4 @@ class ZskiplistNode(object):
         self.ele = ele
         self.score = score
         self.backward = None
-        self.level = numpy.array([ZskiplistLevel() for i in range(0, level)])
+        self.level = [ZskiplistLevel() for _ in range(0, level)]

@@ -1,5 +1,4 @@
 # coding: utf-8
-import numpy
 from numpy.core.umath import isnan
 
 from boost_collections.zskiplist.constant import ZSKIPLIST_MAXLEVEL
@@ -29,8 +28,8 @@ class Zskiplist(object):
         :param ele:
         :return:
         """
-        update = numpy.empty(ZSKIPLIST_MAXLEVEL, dtype=ZskiplistNode)
-        rank = numpy.zeros(ZSKIPLIST_MAXLEVEL, dtype=int)
+        update = [None for _ in range(0, ZSKIPLIST_MAXLEVEL)]
+        rank = [0 for _ in range(0, ZSKIPLIST_MAXLEVEL)]
 
         assert (not isnan(score)), 'score can not be NaN'
         x = self.header
@@ -89,7 +88,7 @@ class Zskiplist(object):
         self.length -= 1
 
     def zsl_delete(self, score, ele):
-        update = numpy.empty(ZSKIPLIST_MAXLEVEL, dtype=ZskiplistNode)
+        update = [None for _ in range(0, ZSKIPLIST_MAXLEVEL)]
         x = self.header
         i = self.level - 1
         while i >= 0:
@@ -103,8 +102,6 @@ class Zskiplist(object):
         x = x.level[0].forward
         if x and score == x.score and elecmp(x.ele, ele) == 0:
             self.zsl_delete_node(x=x, update=update)
-            # if node:
-            #     node[0] = x
             return 1, x
         return 0, None
 
