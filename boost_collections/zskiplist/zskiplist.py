@@ -28,8 +28,8 @@ class Zskiplist(object):
         :param ele:
         :return:
         """
-        update = [None for _ in range(0, ZSKIPLIST_MAXLEVEL)]
-        rank = [0 for _ in range(0, ZSKIPLIST_MAXLEVEL)]
+        update = [None] * ZSKIPLIST_MAXLEVEL
+        rank = [0] * ZSKIPLIST_MAXLEVEL
 
         assert (not isnan(score)), 'score can not be NaN'
         x = self.header
@@ -88,7 +88,7 @@ class Zskiplist(object):
         self.length -= 1
 
     def zsl_delete(self, score, ele):
-        update = [None for _ in range(0, ZSKIPLIST_MAXLEVEL)]
+        update = [None] * ZSKIPLIST_MAXLEVEL
         x = self.header
         i = self.level - 1
         while i >= 0:
