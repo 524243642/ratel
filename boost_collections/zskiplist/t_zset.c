@@ -1,6 +1,5 @@
 #include <Python.h>
 #include "structmember.h"
-#include "math.h"
 
 #define LESSTHAN(p, q) PyObject_RichCompareBool(p, q, Py_LT)
 #define EQUAL(p, q)    PyObject_RichCompareBool(p, q, Py_EQ)
@@ -263,7 +262,6 @@ static PyObject* zslRangeGeneric(zskiplist *zsl, PyObject *args) {
         Py_INCREF(ele);
         PyTuple_SetItem(pObj, 1, Py_BuildValue("f", ln->score));
         PyList_SetItem(pList, i, pObj);
-        Py_INCREF(pObj);
         ln = reverse ? ln->backward : ln->level[0].forward;
     }
     return pList;

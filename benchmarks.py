@@ -20,8 +20,8 @@ def timeit(name):
     print(t2 - t1)
 
 
-RANDOMLONGS_E4 = [random.randint(1, 500000) for i in range(10000)]
-RANDOMLONGS_E3 = [random.randint(1, 500000) for i in range(1000)]
+RANDOMLONGS_E4 = [random.randint(1, 1000000) for i in range(100000)]
+RANDOMLONGS_E3 = [random.randint(1, 1000000) for i in range(1000)]
 
 
 def zadd():
@@ -29,6 +29,9 @@ def zadd():
     with timeit('add operation of SortedSet'):
         for i in RANDOMLONGS_E4:
             zset_obj.zadd(ZsetNode(str(i), i))
+
+    with timeit('range operation of SortedSet'):
+        result = zset_obj.zrange(0, 100000, 1)
 
 
 def list_contains():
