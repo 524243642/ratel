@@ -12,6 +12,7 @@ before_install:
 script:
     - CFLAGS="-coverage" python setup.py build_ext --inplace
     - nosetests -v --with-coverage --cover-package=boost_collections
+    - tox
 
 after_success:
     - TRAVIS_JOB_ID=${TRAVIS_JOB_ID}C cpp-coveralls --build-root .
