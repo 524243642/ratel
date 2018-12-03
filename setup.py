@@ -18,6 +18,17 @@ def desc():
         return ''
 
 
+from setuptools.command.build_ext import build_ext as _build_ext
+
+
+class BuildExtWithoutPlatformSuffix(_build_ext):
+
+    def get_ext_filename(self, ext_name):
+        ext_path = ext_name.split('.')
+        ext_suffix = '.so'
+        return os.path.join(*ext_path) + ext_suffix
+
+
 setup(
     name='ratel',
     keywords='ratel',
@@ -44,12 +55,12 @@ setup(
     install_requires=[
         'numpy>=1.11.3'
     ],
-
     ext_modules=[
         Extension(
             'boost_collections.zskiplist._zskiplist',
             extra_compile_args=['-Wall'],
-            sources=['boost_collections/zskiplist/t_zset.c']
+            sources=['boost_collections/zskiplist/t_zset.c'],
         ),
-    ]
+    ],
+    cmdclass={'build_ext': BuildExtWithoutPlatformSuffix},
 )
