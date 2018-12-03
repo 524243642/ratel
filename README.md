@@ -46,7 +46,7 @@ zset_obj.zrange(0, -1, True)
 zset_obj.zrevrange(0, 1, True)
 ```
 # Compatibility
-* Python 2.7, 3.4+
+* Python 2.7, 3.5+
 
 # Installation
 ```
