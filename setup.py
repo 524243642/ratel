@@ -1,6 +1,6 @@
 import os
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 
 
 def fpath(name):
@@ -43,5 +43,13 @@ setup(
     test_suite='tests',
     install_requires=[
         'numpy>=1.11.3'
+    ],
+
+    ext_modules=[
+        Extension(
+            'boost_collections.zskiplist._zskiplist',
+            extra_compile_args=['-Wall'],
+            sources=['boost_collections/zskiplist/t_zset.c']
+        ),
     ]
 )

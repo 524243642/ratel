@@ -5,6 +5,7 @@ flake8>=3.6.0
 nose>=1.3.7
 tox-travis
 codecov
+cpp-coveralls
 
 # install ratel itself as editable
 -e .

@@ -35,24 +35,30 @@ class ZsetObj(object):
         if end >= llen:
             end = llen - 1
         rangelen = (end - start) + 1
-
         zsl = self.zset.zsl
-        if reverse:
-            ln = zsl.tail
-            if start > 0:
-                ln = zsl.zsl_get_element_by_rank(rank=llen - start)
-        else:
-            ln = zsl.header.level[0].forward
-            if start > 0:
-                ln = zsl.zsl_get_element_by_rank(rank=start + 1)
+
+        rets = zsl.zsl_range_generic(reverse=reverse, start=start, rangelen=rangelen)
         result = []
-        while rangelen > 0:
-            assert ln is not None
-            node = ZsetNode(ele=ln.ele, score=ln.score if withscores else None)
-            result.append(node)
-            ln = ln.backward if reverse else ln.level[0].forward
-            rangelen -= 1
+        for ret in rets:
+            result.append(ZsetNode(ele=ret[0], score=ret[1] if withscores else None))
         return result
+
+        # if reverse:
+        #     ln = zsl.tail
+        #     if start > 0:
+        #         ln = zsl.zsl_get_element_by_rank(rank=llen - start)
+        # else:
+        #     ln = zsl.header.level[0].forward
+        #     if start > 0:
+        #         ln = zsl.zsl_get_element_by_rank(rank=start + 1)
+        # result = []
+        # while rangelen > 0:
+        #     assert ln is not None
+        #     node = ZsetNode(ele=ln.ele, score=ln.score if withscores else None)
+        #     result.append(node)
+        #     ln = ln.backward if reverse else ln.level[0].forward
+        #     rangelen -= 1
+        # return result
 
     def zrange(self, start, end, withscores):
         """

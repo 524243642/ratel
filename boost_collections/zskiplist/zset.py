@@ -3,7 +3,8 @@ from numpy.core.umath import isnan
 
 from boost_collections.zskiplist.constant import ZADD_INCR, ZADD_NX, ZADD_NAN, ZADD_NOP, ZADD_UPDATED, ZADD_ADDED, OK, \
     ERR
-from boost_collections.zskiplist.zskiplist import Zskiplist
+# from boost_collections.zskiplist.zskiplist import Zskiplist
+from boost_collections.zskiplist.zskiplist_ex import ZskiplistEx
 
 
 class Zset(object):
@@ -11,7 +12,8 @@ class Zset(object):
     def __init__(self):
         super(Zset, self).__init__()
         self.dict_ = dict()
-        self.zsl = Zskiplist()
+        # self.zsl = Zskiplist()
+        self.zsl = ZskiplistEx()
 
     def zset_add(self, score, ele, flags):
         """
@@ -69,16 +71,18 @@ class Zset(object):
                     return 0, ZADD_NAN, 0
             # Remove and re-insert when score changes.
             if score != curscore:
-                result, node = self.zsl.zsl_delete(score=curscore, ele=ele)
+                result = self.zsl.zsl_delete(score=curscore, ele=ele)
                 assert result == 1
-                znode = self.zsl.zsl_insert(score=score, ele=node.ele)
-                dict_[ele] = znode.score
+                result = self.zsl.zsl_insert(score=score, ele=ele)
+                assert result == 1
+                dict_[ele] = score
 
             return 1, ZADD_UPDATED, score
         else:
-            znode = self.zsl.zsl_insert(score=score, ele=ele)
-            assert dict_.setdefault(ele, znode.score) == score
-            return 1, ZADD_ADDED, znode.score
+            result = self.zsl.zsl_insert(score=score, ele=ele)
+            assert result == 1
+            assert dict_.setdefault(ele, score) == score
+            return 1, ZADD_ADDED, score
 
     def zset_del(self, ele):
         """
@@ -89,7 +93,7 @@ class Zset(object):
         """
         de = self.dict_.pop(ele, None)
         if de is not None:
-            result, node = self.zsl.zsl_delete(score=de, ele=ele)
+            result = self.zsl.zsl_delete(score=de, ele=ele)
             assert result == 1
             return 1
         return 0
@@ -99,15 +103,15 @@ class Zset(object):
         Return the length of the sorted set
         :return:
         """
-        length = self.zsl.length
+        length = self.zsl.zsl_length()
         return length
 
     def zset_score(self, member):
         """
         Return (by reference) the score of the specified member of the sorted set.
-        If the element does not exist C_ERR is returned
-        otherwise C_OK and score is returned.
-        If 'member' is NULL, C_ERR is returned.
+        If the element does not exist ERR is returned
+        otherwise OK and score is returned.
+        If 'member' is NULL, ERR is returned.
         :param member:
         :return:
         """
