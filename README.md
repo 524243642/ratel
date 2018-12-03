@@ -20,7 +20,7 @@ Skip Lists are data structure that can be used in place of balanced trees. They
 are easier to implement and generally faster. This library uses redis skip lists to
 implement SortedSet data types for Python.
 
-SortedSet is implemented in Python
+SortedSet is implemented in Python and C.
 
 Here is a few examples:
 ```python
