@@ -303,10 +303,10 @@ zskiplist_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     return zskiplist_alloc(type);
 }
 
-static PyObject *
+static int
 zskiplist_init(zskiplist *zsl, PyObject *args, PyObject *kwds)
 {
-    return (PyObject *)zsl;
+    return 0;
 }
 
 static int
