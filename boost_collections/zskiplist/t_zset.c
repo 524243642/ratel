@@ -1,6 +1,6 @@
 #include <Python.h>
 #include "structmember.h"
-//#include "math.h"
+#include "math.h"
 
 #define LESSTHAN(p, q) PyObject_RichCompareBool(p, q, Py_LT)
 #define EQUAL(p, q)    PyObject_RichCompareBool(p, q, Py_EQ)
@@ -91,7 +91,7 @@ static PyObject *zslInsert(zskiplist *zsl, PyObject *args) {
     x = zsl->header;
     int cmp;
 
-//    assert(!isnan(score));
+    assert(!isnan(score));
     for (i = zsl->level-1; i >= 0; i--) {
         rank[i] = i == (zsl->level-1) ? 0 : rank[i+1];
         while (x->level[i].forward &&

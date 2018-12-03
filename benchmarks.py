@@ -20,8 +20,8 @@ def timeit(name):
     print(t2 - t1)
 
 
-RANDOMLONGS_E4 = [random.randint(1, 100000) for i in range(10000)]
-RANDOMLONGS_E3 = [random.randint(1, 100000) for i in range(1000)]
+RANDOMLONGS_E4 = [random.randint(1, 500000) for i in range(10000)]
+RANDOMLONGS_E3 = [random.randint(1, 500000) for i in range(1000)]
 
 
 def zadd():
