@@ -10,9 +10,9 @@ before_install:
     - pip install -r requirements-dev.txt
 
 script:
-    - CFLAGS="-coverage" python setup.py build_ext --inplace
+#    - CFLAGS="-coverage" python setup.py build_ext --inplace
     - tox
 
 after_success:
-    - TRAVIS_JOB_ID=${TRAVIS_JOB_ID}C cpp-coveralls --build-root .
+#    - TRAVIS_JOB_ID=${TRAVIS_JOB_ID}C cpp-coveralls --build-root .
     - coveralls
