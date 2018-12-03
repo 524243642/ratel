@@ -12,7 +12,6 @@ before_install:
 
 script:
     - CFLAGS="-coverage" python setup.py build_ext --inplace
-    - flake8 --max-line-length=110 *.py
     - nosetests -v --with-coverage --cover-package=boost_collections
 
 after_success:
