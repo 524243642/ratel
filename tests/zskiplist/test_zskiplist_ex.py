@@ -7,13 +7,13 @@ class TestZskiplist(unittest.TestCase):
 
     def setUp(self):
         self.zsl = ZskiplistEx()
-        # self.zsl.zsl_insert(10, 'a')
-        # self.zsl.zsl_insert(5, 'b')
+        self.zsl.zsl_insert(10, 'a')
+        self.zsl.zsl_insert(5, 'b')
 
     def test_zsl_length(self):
         zsl = self.zsl
-        # length = zsl.zsl_length()
-        # self.assertEqual(2, length)
+        length = zsl.zsl_length()
+        self.assertEqual(2, length)
 
     def test_zsl_insert(self):
         zsl = self.zsl
