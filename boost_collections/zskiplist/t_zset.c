@@ -1,6 +1,6 @@
 #include <Python.h>
 #include "structmember.h"
-#include "math.h"
+//#include "math.h"
 
 #define LESSTHAN(p, q) PyObject_RichCompareBool(p, q, Py_LT)
 #define EQUAL(p, q)    PyObject_RichCompareBool(p, q, Py_EQ)
@@ -31,8 +31,8 @@ typedef struct zskiplistNode {
     } level[];
 } zskiplistNode;
 
-typedef struct zskiplist {
-    PyObject_VAR_HEAD
+typedef struct {
+    PyObject_HEAD
     struct zskiplistNode *header, *tail;
     unsigned long length;
     int level;
@@ -45,20 +45,20 @@ static int zslRandomLevel(void) {
     return (level<ZSKIPLIST_MAXLEVEL) ? level : ZSKIPLIST_MAXLEVEL;
 }
 
-//static char *
-//cstr_repr(PyObject *o)
-//{
-//    PyObject *r;
-//    char *s;
-//
-//    r = PyObject_Repr(o);
-//    if (r == NULL)
-//        return NULL;
-//
-//    s = AS_STR(r);
-//    Py_DECREF(r);
-//    return s;
-//}
+static char *
+cstr_repr(PyObject *o)
+{
+    PyObject *r;
+    char *s;
+
+    r = PyObject_Repr(o);
+    if (r == NULL)
+        return NULL;
+
+    s = AS_STR(r);
+    Py_DECREF(r);
+    return s;
+}
 
 static zskiplistNode *zslCreateNode(int level, double score, PyObject *ele) {
     int size = sizeof(zskiplistNode)+level*sizeof(struct zskiplistLevel);
@@ -91,7 +91,7 @@ static PyObject *zslInsert(zskiplist *zsl, PyObject *args) {
     x = zsl->header;
     int cmp;
 
-    assert(!isnan(score));
+//    assert(!isnan(score));
     for (i = zsl->level-1; i >= 0; i--) {
         rank[i] = i == (zsl->level-1) ? 0 : rank[i+1];
         while (x->level[i].forward &&
@@ -126,7 +126,6 @@ static PyObject *zslInsert(zskiplist *zsl, PyObject *args) {
         x->level[i].span = update[i]->level[i].span - (rank[0] - rank[i]);
         update[i]->level[i].span = (rank[0] - rank[i]) + 1;
     }
-    /* increment span for untouched levels */
     for (i = level; i < zsl->level; i++) {
         update[i]->level[i].span++;
     }
@@ -310,47 +309,61 @@ zskiplist_init(zskiplist *zsl, PyObject *args, PyObject *kwds)
     return (PyObject *)zsl;
 }
 
+static int
+zskiplist_traverse(zskiplist *zsl, visitproc visit, void *arg)
+{
+
+    zskiplistNode *node = zsl->header->level[0].forward, *next;
+
+    while(node) {
+        next = node->level[0].forward;
+        Py_VISIT(node->ele);
+        node = next;
+    }
+    return 0;
+}
+
 static Py_ssize_t
 zskiplist_length(zskiplist *zsl)
 {
     return zsl->length;
 }
 
-//static PyObject *
-//zskiplist_repr(zskiplist *zsl)
-//{
-//    PyObject *result = NULL, *keys;
-//    char *listrepr;
-//    int status = Py_ReprEnter((PyObject*)zsl);
-//
-//    if (status != 0) {
-//        if (status < 0)
-//            return NULL;
-//        return STR_FROM_FORMAT("%s(...)", Py_TYPE(zsl)->tp_name);
-//    }
-//
-//    if (!zsl->length) {
-//        Py_ReprLeave((PyObject*)zsl);
-//        return STR_FROM_FORMAT("%s()", Py_TYPE(zsl)->tp_name);
-//    }
-//
-//    keys = PySequence_List((PyObject*)zsl);
-//    if (keys == NULL)
-//        goto done;
-//
-//    listrepr = cstr_repr(keys);
-//    Py_DECREF(keys);
-//    if (listrepr == NULL)
-//        goto done;
-//
-//    listrepr = strdup(listrepr);
-//    result = STR_FROM_FORMAT("%s(%s)", Py_TYPE(zsl)->tp_name, listrepr);
-//    free(listrepr);
-//
-//done:
-//    Py_ReprLeave((PyObject*)zsl);
-//    return result;
-//}
+static PyObject *
+zskiplist_repr(zskiplist *zsl)
+{
+    PyObject *result = NULL, *keys;
+    char *listrepr;
+    int status = Py_ReprEnter((PyObject*)zsl);
+
+    if (status != 0) {
+        if (status < 0)
+            return NULL;
+        return STR_FROM_FORMAT("%s(...)", Py_TYPE(zsl)->tp_name);
+    }
+
+    if (!zsl->length) {
+        Py_ReprLeave((PyObject*)zsl);
+        return STR_FROM_FORMAT("%s()", Py_TYPE(zsl)->tp_name);
+    }
+
+    keys = PySequence_List((PyObject*)zsl);
+    if (keys == NULL)
+        goto done;
+
+    listrepr = cstr_repr(keys);
+    Py_DECREF(keys);
+    if (listrepr == NULL)
+        goto done;
+
+    listrepr = strdup(listrepr);
+    result = STR_FROM_FORMAT("%s(%s)", Py_TYPE(zsl)->tp_name, listrepr);
+    free(listrepr);
+
+done:
+    Py_ReprLeave((PyObject*)zsl);
+    return result;
+}
 
 PyDoc_STRVAR(zslInsert_doc,
 "S.zslInsert(score,ele) -> None -- Add element elem to the skiplist.");
@@ -391,8 +404,7 @@ static PyTypeObject zskiplistType = {
     0,                             /* tp_getattr */
     0,                             /* tp_setattr */
     0,                             /* tp_reserved */
-//    (reprfunc)zskiplist_repr,      /* tp_repr */
-    0,                             /* tp_repr */
+    (reprfunc)zskiplist_repr,      /* tp_repr */
     0,                             /* tp_as_number */
     &zskiplist_as_sequence,        /* tp_as_sequence */
     0,                             /* tp_as_mapping */
@@ -404,7 +416,7 @@ static PyTypeObject zskiplistType = {
     0,                             /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC, /* tp_flags */
     "zskiplist Objects",           /* tp_doc */
-    0,                             /* tp_traverse */
+    (traverseproc)zskiplist_traverse,     /* tp_traverse */
     0,                             /* tp_clear */
     0,                             /* tp_richcompare */
     0,                             /* tp_weaklistoffset */

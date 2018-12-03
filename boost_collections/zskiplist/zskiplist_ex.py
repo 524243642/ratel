@@ -2,7 +2,9 @@ from ._zskiplist import zskiplist
 
 
 class ZskiplistEx(object):
+
     def __init__(self):
+        super(ZskiplistEx, self).__init__()
         self._zskiplist = zskiplist()
 
     def zsl_insert(self, score, ele):
