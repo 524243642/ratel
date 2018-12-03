@@ -14,5 +14,5 @@ script:
     - tox
 
 after_success:
-    - TRAVIS_JOB_ID=${TRAVIS_JOB_ID}C cpp-coveralls --build-root .
-    - coveralls
+#    - TRAVIS_JOB_ID=${TRAVIS_JOB_ID}C cpp-coveralls --build-root .
+#    - coveralls
