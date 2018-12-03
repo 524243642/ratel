@@ -59,7 +59,7 @@ setup(
         Extension(
             'boost_collections.zskiplist._zskiplist',
             extra_compile_args=['-Wall'],
-            sources=['boost_collections/zskiplist/t_zset.c'],
+            sources=['boost_collections/zskiplist/t_zset.c']
         ),
     ],
     cmdclass={'build_ext': BuildExtWithoutPlatformSuffix},

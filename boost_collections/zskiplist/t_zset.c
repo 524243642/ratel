@@ -439,7 +439,7 @@ static PyTypeObject zskiplistType = {
 #ifdef PY3
 
 #define INITERROR return NULL
-#define INIT PyMODINIT_FUNC PyInit__sortedset
+#define INIT PyMODINIT_FUNC PyInit__zskiplist
 
 static PyModuleDef zskiplistmodule = {
     PyModuleDef_HEAD_INIT,
