@@ -10,7 +10,7 @@ of elements and a probabilistic alternative to Balanced Trees.It is also easier
 to implement.
 This library uses redis skip list to implement SortedSet data types for Python
 
-This library modified in three ways:
+This library modified in four ways:
 1) This implementation is allowed to repeated scores.
 2) The comparison is not just by score but by key data.
 3) It's a doubly linked list with the backward being only at "level 1". 
