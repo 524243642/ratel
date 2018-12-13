@@ -3,6 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/ratel.svg)](https://badge.fury.io/py/ratel)
 [![Build Status](https://travis-ci.org/524243642/ratel.svg?branch=master)](https://travis-ci.org/524243642/ratel)
 [![codecov](https://codecov.io/gh/524243642/ratel/branch/master/graph/badge.svg)](https://codecov.io/gh/524243642/ratel)
+[![ratel PyPI Downloads](https://pypistats.com/badge/ratel.png)](https://pypistats.com/package/ratel)
 
 Skip list is a data structure that allows fast search within an ordered sequence 
 of elements and a probabilistic alternative to Balanced Trees.It is also easier
