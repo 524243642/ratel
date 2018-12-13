@@ -32,7 +32,7 @@ class BuildExtWithoutPlatformSuffix(_build_ext):
 setup(
     name='ratel',
     keywords='ratel',
-    version='0.3.3',
+    version='0.3.4',
     description='Sorted data structure implementation by using skiplist and dict with Python and C',
     long_description=desc(),
     long_description_content_type="text/markdown",
