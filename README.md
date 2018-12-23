@@ -71,6 +71,13 @@ zscore               | O(1)
 zcard                | O(1)
 zrange               | O(log N)
 zrevrange            | O(log N)
+zfloor               | O(log N)
+zlower               | O(log N)
+
+# Release
+0.3.4 2018-12-04 zadd zincrby zrem zscore zcard zrange zrevrange
+
+0.4.0 2018-12-23 zfloor zlower
 
 # License
 MIT

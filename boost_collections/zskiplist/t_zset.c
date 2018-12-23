@@ -231,6 +231,64 @@ static zskiplistNode* zslGetElementByRank(zskiplist *zsl, unsigned long rank) {
     return NULL;
 }
 
+static PyObject* zslGetLowerElementByScore(zskiplist *zsl, PyObject *args) {
+    double score;
+    if(!PyArg_ParseTuple(args, "d", &score)){
+        return FIL;
+    }
+
+    if (PyErr_Occurred())
+        return FIL;
+
+    zskiplistNode *x;
+    int i;
+    x = zsl->header;
+    for (i = zsl->level-1; i >= 0; i--) {
+        while (x->level[i].forward && x->level[i].forward->score < score)
+        {
+            x = x->level[i].forward;
+        }
+    }
+    if (x != zsl->header) {
+        PyObject* ele = x->ele;
+        PyObject* pObj = PyTuple_New(2);
+        PyTuple_SetItem(pObj, 0, ele);
+        Py_INCREF(ele);
+        PyTuple_SetItem(pObj, 1, Py_BuildValue("f", x->score));
+        return pObj;
+    }
+    Py_RETURN_NONE;
+}
+
+static PyObject* zslGetFloorElementByScore(zskiplist *zsl, PyObject *args) {
+    double score;
+    if(!PyArg_ParseTuple(args, "d", &score)){
+        return FIL;
+    }
+
+    if (PyErr_Occurred())
+        return FIL;
+
+    zskiplistNode *x;
+    int i;
+    x = zsl->header;
+    for (i = zsl->level-1; i >= 0; i--) {
+        while (x->level[i].forward && x->level[i].forward->score <= score)
+        {
+            x = x->level[i].forward;
+        }
+    }
+    if (x != zsl->header) {
+        PyObject* ele = x->ele;
+        PyObject* pObj = PyTuple_New(2);
+        PyTuple_SetItem(pObj, 0, ele);
+        Py_INCREF(ele);
+        PyTuple_SetItem(pObj, 1, Py_BuildValue("f", x->score));
+        return pObj;
+    }
+    Py_RETURN_NONE;
+}
+
 static PyObject* zslRangeGeneric(zskiplist *zsl, PyObject *args) {
 
     long reverse;
@@ -372,10 +430,18 @@ PyDoc_STRVAR(zslDelete_doc,
 PyDoc_STRVAR(zslRangeGeneric_doc,
 "S.zslRangeGeneric(reverse,start,rangelen) -> list -- Get elements by condition.");
 
+PyDoc_STRVAR(zslGetFloorElementByScore_doc,
+"S.zslGetFloorElementByScore(score) -> tuple -- Returns a key-value mapping associated with the greatest score less than or equal to the given score.");
+
+PyDoc_STRVAR(zslGetLowerElementByScore_doc,
+"S.zslGetLowerElementByScore(score) -> tuple -- Returns a key-value mapping associated with the greatest score less than the given score.");
+
 static PyMethodDef zskiplist_methods[] = {
     {"zslInsert", (PyCFunction)zslInsert, METH_VARARGS, zslInsert_doc},
     {"zslDelete", (PyCFunction)zslDelete, METH_VARARGS, zslDelete_doc},
     {"zslRangeGeneric", (PyCFunction)zslRangeGeneric, METH_VARARGS, zslRangeGeneric_doc},
+    {"zslGetFloorElementByScore", (PyCFunction)zslGetFloorElementByScore, METH_VARARGS, zslGetFloorElementByScore_doc},
+    {"zslGetLowerElementByScore", (PyCFunction)zslGetLowerElementByScore, METH_VARARGS, zslGetLowerElementByScore_doc},
     {NULL}  /* Sentinel */
 };
 
