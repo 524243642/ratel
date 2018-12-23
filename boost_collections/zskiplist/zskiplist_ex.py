@@ -17,5 +17,11 @@ class ZskiplistEx(object):
     def zsl_range_generic(self, reverse, start, rangelen):
         return self._zskiplist.zslRangeGeneric(reverse, start, rangelen)
 
+    def zsl_get_floor_element_by_score(self, score):
+        return self._zskiplist.zslGetFloorElementByScore(score)
+
+    def zsl_get_lower_element_by_score(self, score):
+        return self._zskiplist.zslGetLowerElementByScore(score)
+
     def zsl_length(self):
         return len(self._zskiplist)

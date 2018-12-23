@@ -121,3 +121,21 @@ class Zset(object):
         if de is None:
             return ERR, 0
         return OK, de
+
+    def zset_get_floor_element_by_score(self, score):
+        """
+        Returns a key-value mapping associated with the greatest key
+        less than or equal to the given key,or None if there is no such key.
+        :param score:
+        :return:
+        """
+        return self.zsl.zsl_get_floor_element_by_score(score)
+
+    def zset_get_lower_element_by_score(self, score):
+        """
+        Returns a key-value mapping associated with the greatest key
+        less than the given key,or None if there is no such key.
+        :param score:
+        :return:
+        """
+        return self.zsl.zsl_get_lower_element_by_score(score)

@@ -173,3 +173,23 @@ class ZsetObj(object):
         if retval == OK:
             return retscore
         return None
+
+    def zfloor(self, score):
+        """
+        :param score:
+        :return:
+        """
+        ret = self.zset.zset_get_floor_element_by_score(score=score)
+        if not ret:
+            return None
+        return ZsetNode(ele=ret[0], score=ret[1])
+
+    def zlower(self, score):
+        """
+        :param score:
+        :return:
+        """
+        ret = self.zset.zset_get_lower_element_by_score(score=score)
+        if not ret:
+            return None
+        return ZsetNode(ele=ret[0], score=ret[1])

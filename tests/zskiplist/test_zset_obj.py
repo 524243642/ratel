@@ -92,6 +92,40 @@ class TestZsetObj(unittest.TestCase):
         rets = zset_obj.zrevrange(-1, -1, True)
         self.assertEqual('a', rets[0].ele)
 
+    def test_zfloor(self):
+        zset_obj = self.zset_obj
+        ret = zset_obj.zfloor(2)
+        self.assertEqual('c', ret.ele)
+        self.assertEqual(2, ret.score)
+
+        ret = zset_obj.zfloor(2.5)
+        self.assertEqual('c', ret.ele)
+        self.assertEqual(2, ret.score)
+
+        ret = zset_obj.zfloor(5)
+        self.assertEqual('b', ret.ele)
+        self.assertEqual(3, ret.score)
+
+        ret = zset_obj.zfloor(0.5)
+        self.assertIsNone(ret)
+
+    def test_zlower(self):
+        zset_obj = self.zset_obj
+        ret = zset_obj.zlower(2)
+        self.assertEqual('a', ret.ele)
+        self.assertEqual(1, ret.score)
+
+        ret = zset_obj.zlower(2.5)
+        self.assertEqual('c', ret.ele)
+        self.assertEqual(2, ret.score)
+
+        ret = zset_obj.zfloor(5)
+        self.assertEqual('b', ret.ele)
+        self.assertEqual(3, ret.score)
+
+        ret = zset_obj.zfloor(0.5)
+        self.assertIsNone(ret)
+
 
 if __name__ == '__main__':
     unittest.main()
