@@ -1,9 +1,11 @@
 # Ratel
 
-[![PyPI version](https://badge.fury.io/py/ratel.svg)](https://badge.fury.io/py/ratel)
+[![PyPI version](https://img.shields.io/pypi/v/ratel.svg)](https://pypi.org/project/ratel/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/ratel.svg)](https://pypi.org/project/ratel/)
 [![Build Status](https://travis-ci.org/524243642/ratel.svg?branch=master)](https://travis-ci.org/524243642/ratel)
 [![codecov](https://codecov.io/gh/524243642/ratel/branch/master/graph/badge.svg)](https://codecov.io/gh/524243642/ratel)
-[![ratel PyPI Downloads](https://pypistats.com/badge/ratel.svg)](https://pypistats.com/package/ratel)
+[![ratel PyPI Downloads](https://img.shields.io/pypi/dm/ratel.svg)](https://pypistats.org/packages/ratel)
+[![GitHub](https://img.shields.io/github/license/524243642/ratel.svg)](LICENSE.txt)
 
 Skip list is a data structure that allows fast search within an ordered sequence 
 of elements and a probabilistic alternative to Balanced Trees.It is also easier
@@ -78,6 +80,8 @@ zlower               | O(log N)
 0.3.4 2018-12-04 zadd zincrby zrem zscore zcard zrange zrevrange
 
 0.4.0 2018-12-23 zfloor zlower
+
+0.4.1 2019-01-23 shields.io access
 
 # License
 MIT
