@@ -4,7 +4,7 @@
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/ratel.svg)](https://pypi.org/project/ratel/)
 [![Build Status](https://travis-ci.org/524243642/ratel.svg?branch=master)](https://travis-ci.org/524243642/ratel)
 [![codecov](https://codecov.io/gh/524243642/ratel/branch/master/graph/badge.svg)](https://codecov.io/gh/524243642/ratel)
-[![ratel PyPI Downloads](https://img.shields.io/pypi/dm/ratel.svg)](https://pypistats.org/packages/ratel)
+[![ratel PyPI Downloads](https://img.shields.io/pypi/dm/ratel.svg?colorB=green)](https://pypistats.org/packages/ratel)
 [![GitHub](https://img.shields.io/github/license/524243642/ratel.svg)](LICENSE.txt)
 
 Skip list is a data structure that allows fast search within an ordered sequence 
