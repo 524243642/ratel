@@ -47,6 +47,10 @@ zset_obj.zscore('a')
 zset_obj.zrange(0, -1, True)
 # zrevrange
 zset_obj.zrevrange(0, 1, True)
+# zrange_by_score
+zset_obj.zrange_by_score(1, 0, 2, 0)
+# zrevrange_by_score
+zset_obj.zrevrange_by_score(1, 0, 2, 0)
 ```
 # Compatibility
 * Python 2.7, 3.5+
@@ -71,17 +75,21 @@ zincrby              | O(log N)
 zrem                 | O(log N)
 zscore               | O(1)
 zcard                | O(1)
-zrange               | O(log N)
-zrevrange            | O(log N)
+zrange               | O(log(N) + M)
+zrevrange            | O(log(N) + M)
 zfloor               | O(log N)
 zlower               | O(log N)
+zrange_by_score      | O(log(N) + M)
+zrevrange_by_score   | O(log(N) + M)
 
 # Release
 0.3.4 2018-12-04 zadd zincrby zrem zscore zcard zrange zrevrange
 
-0.4.0 2018-12-23 zfloor zlower
+0.4.0 2018-12-23 zfloor zlower**_**__**_**
 
 0.4.1 2019-01-23 shields.io access
+
+0.5.0 2019-04-25 zrange_by_score zrevrange_by_score
 
 # License
 MIT

@@ -37,6 +37,12 @@ typedef struct {
     int level;
 } zskiplist;
 
+/* Struct to hold a inclusive/exclusive range spec by score comparison. */
+typedef struct {
+    double min, max;
+    int minex, maxex; /* are min or max exclusive? */
+} zrangespec;
+
 static int zslRandomLevel(void) {
     int level = 1;
     while ((random()&0xFFFF) < (ZSKIPLIST_P * 0xFFFF))
@@ -289,6 +295,132 @@ static PyObject* zslGetFloorElementByScore(zskiplist *zsl, PyObject *args) {
     Py_RETURN_NONE;
 }
 
+static int zslValueGteMin(double value, zrangespec *spec) {
+    return spec->minex ? (value > spec->min) : (value >= spec->min);
+}
+
+static int zslValueLteMax(double value, zrangespec *spec) {
+    return spec->maxex ? (value < spec->max) : (value <= spec->max);
+}
+
+/* Returns if there is a part of the zset is in range. */
+static int zslIsInRange(zskiplist *zsl, zrangespec *range) {
+    zskiplistNode *x;
+
+    /* Test for ranges that will always be empty. */
+    if (range->min > range->max ||
+            (range->min == range->max && (range->minex || range->maxex)))
+        return 0;
+    x = zsl->tail;
+    if (x == NULL || !zslValueGteMin(x->score,range))
+        return 0;
+    x = zsl->header->level[0].forward;
+    if (x == NULL || !zslValueLteMax(x->score,range))
+        return 0;
+    return 1;
+}
+
+static zskiplistNode *zslLastInRange(zskiplist *zsl, zrangespec *range) {
+    zskiplistNode *x;
+    int i;
+
+    /* If everything is out of range, return early. */
+    if (!zslIsInRange(zsl,range)) return NULL;
+
+    x = zsl->header;
+    for (i = zsl->level-1; i >= 0; i--) {
+        /* Go forward while *IN* range. */
+        while (x->level[i].forward &&
+            zslValueLteMax(x->level[i].forward->score,range))
+                x = x->level[i].forward;
+    }
+
+    /* Check if score >= min. */
+    if (!zslValueGteMin(x->score,range)) return NULL;
+    return x;
+}
+
+/* Find the first node that is contained in the specified range.
+ * Returns NULL when no element is contained in the range. */
+static zskiplistNode *zslFirstInRange(zskiplist *zsl, zrangespec *range) {
+    zskiplistNode *x;
+    int i;
+
+    /* If everything is out of range, return early. */
+    if (!zslIsInRange(zsl,range)) return NULL;
+
+    x = zsl->header;
+    for (i = zsl->level-1; i >= 0; i--) {
+        /* Go forward while *OUT* of range. */
+        while (x->level[i].forward &&
+            !zslValueGteMin(x->level[i].forward->score,range))
+                x = x->level[i].forward;
+    }
+    /* This is an inner range, so the next node cannot be NULL. */
+    x = x->level[0].forward;
+    /* Check if score <= max. */
+    if (!zslValueLteMax(x->score,range)) return NULL;
+    return x;
+}
+
+static PyObject* zslRangeGenericByScore(zskiplist *zsl, PyObject *args) {
+    long reverse;
+    long limit;
+    long rangelen = 0;
+    double min, max;
+    int minex, maxex;
+
+    if(!PyArg_ParseTuple(args, "l|d|i|d|i|l", &reverse, &min, &minex, &max, &maxex, &limit)){
+        return PyList_New(0);
+    }
+    zrangespec range;
+    range.min = min;
+    range.max = max;
+    range.minex = minex;
+    range.maxex = maxex;
+
+    zskiplistNode *ln;
+
+    /* If reversed, get the last node in range as starting point. */
+    if (reverse) {
+        ln = zslLastInRange(zsl,&range);
+    } else {
+        ln = zslFirstInRange(zsl,&range);
+    }
+
+    if (ln == NULL) {
+        return PyList_New(0);
+    }
+
+    PyObject* pList = PyList_New(0);
+
+    while (ln && limit--) {
+        /* Abort when the node is no longer in range. */
+        if (reverse) {
+            if (!zslValueGteMin(ln->score,&range)) break;
+        } else {
+            if (!zslValueLteMax(ln->score,&range)) break;
+        }
+
+        rangelen++;
+
+        PyObject* ele = ln->ele;
+        PyObject* pObj = PyTuple_New(2);
+        PyTuple_SetItem(pObj, 0, ele);
+        Py_INCREF(ele);
+        PyTuple_SetItem(pObj, 1, Py_BuildValue("f", ln->score));
+        PyList_Append(pList, pObj);
+        Py_DECREF(pObj);
+        /* Move to next node */
+        if (reverse) {
+            ln = ln->backward;
+        } else {
+            ln = ln->level[0].forward;
+        }
+    }
+    return pList;
+}
+
 static PyObject* zslRangeGeneric(zskiplist *zsl, PyObject *args) {
 
     long reverse;
@@ -430,6 +562,9 @@ PyDoc_STRVAR(zslDelete_doc,
 PyDoc_STRVAR(zslRangeGeneric_doc,
 "S.zslRangeGeneric(reverse,start,rangelen) -> list -- Get elements by condition.");
 
+PyDoc_STRVAR(zslRangeGenericByScore_doc,
+"S.zslRangeGenericByScore(reverse,min,minex,max,maxex,limit) -> list -- Get elements by condition.");
+
 PyDoc_STRVAR(zslGetFloorElementByScore_doc,
 "S.zslGetFloorElementByScore(score) -> tuple -- Returns a key-value mapping associated with the greatest score less than or equal to the given score.");
 
@@ -440,6 +575,7 @@ static PyMethodDef zskiplist_methods[] = {
     {"zslInsert", (PyCFunction)zslInsert, METH_VARARGS, zslInsert_doc},
     {"zslDelete", (PyCFunction)zslDelete, METH_VARARGS, zslDelete_doc},
     {"zslRangeGeneric", (PyCFunction)zslRangeGeneric, METH_VARARGS, zslRangeGeneric_doc},
+    {"zslRangeGenericByScore", (PyCFunction)zslRangeGenericByScore, METH_VARARGS, zslRangeGenericByScore_doc},
     {"zslGetFloorElementByScore", (PyCFunction)zslGetFloorElementByScore, METH_VARARGS, zslGetFloorElementByScore_doc},
     {"zslGetLowerElementByScore", (PyCFunction)zslGetLowerElementByScore, METH_VARARGS, zslGetLowerElementByScore_doc},
     {NULL}  /* Sentinel */

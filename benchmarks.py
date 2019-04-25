@@ -49,7 +49,27 @@ def zscore():
             zset_obj.zscore(str(i))
 
 
+def zrange_by_score():
+    zset_obj = ZsetObj()
+    for i in RANDOMLONGS_E4:
+        zset_obj.zadd(ZsetNode(str(i), i))
+    with timeit('search range inside SortedSet'):
+        for i in range(0, 10000):
+            zset_obj.zrange_by_score(1, 0, 10000, 0)
+
+
+def zrange():
+    zset_obj = ZsetObj()
+    for i in RANDOMLONGS_E4:
+        zset_obj.zadd(ZsetNode(str(i), i))
+    with timeit('search range inside SortedSet'):
+        for i in range(0, 10000):
+            zset_obj.zrange(1, 10000, 1)
+
+
 if __name__ == '__main__':
-    zadd()
-    list_contains()
-    zscore()
+    zrange_by_score()
+    # zrange()
+    # zadd()
+    # list_contains()
+    # zscore()

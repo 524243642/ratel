@@ -64,6 +64,45 @@ class TestZsetObj(unittest.TestCase):
         retval = zset_obj.zscore(None)
         self.assertEqual(None, retval)
 
+    def test_zrange_by_score(self):
+        zset_obj = self.zset_obj
+        rets = zset_obj.zrange_by_score(0, 1, 4, 1)
+        self.assertEqual(3, len(rets))
+        self.assertEqual('a', rets[0].ele)
+        self.assertEqual('c', rets[1].ele)
+        self.assertEqual('b', rets[2].ele)
+        rets = zset_obj.zrange_by_score(1, 1, 3, 1)
+        self.assertEqual(1, len(rets))
+        self.assertEqual('c', rets[0].ele)
+        rets = zset_obj.zrange_by_score(1, 0, 3, 0)
+        self.assertEqual(3, len(rets))
+        self.assertEqual('a', rets[0].ele)
+        self.assertEqual('c', rets[1].ele)
+        self.assertEqual('b', rets[2].ele)
+        rets = zset_obj.zrange_by_score(1, 0, 3, 0, 1)
+        self.assertEqual(1, len(rets))
+        self.assertEqual('a', rets[0].ele)
+
+    def test_zrevrange_by_score(self):
+        zset_obj = self.zset_obj
+        rets = zset_obj.zrevrange_by_score(0, 1, 4, 1)
+        self.assertEqual(3, len(rets))
+        self.assertEqual('b', rets[0].ele)
+        self.assertEqual('c', rets[1].ele)
+        self.assertEqual('a', rets[2].ele)
+        rets = zset_obj.zrevrange_by_score(1, 1, 3, 1)
+        self.assertEqual(1, len(rets))
+        self.assertEqual('c', rets[0].ele)
+        rets = zset_obj.zrevrange_by_score(1, 0, 3, 0)
+        self.assertEqual(3, len(rets))
+        self.assertEqual('b', rets[0].ele)
+        self.assertEqual('c', rets[1].ele)
+        self.assertEqual('a', rets[2].ele)
+        rets = zset_obj.zrevrange_by_score(1, 0, 3, 0, 2)
+        self.assertEqual(2, len(rets))
+        self.assertEqual('b', rets[0].ele)
+        self.assertEqual('c', rets[1].ele)
+
     def test_zrange(self):
         zset_obj = self.zset_obj
         rets = zset_obj.zrange(0, 1, True)

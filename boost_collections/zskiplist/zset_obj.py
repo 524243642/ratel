@@ -13,6 +13,25 @@ class ZsetObj(object):
         super(ZsetObj, self).__init__()
         self.zset = Zset()
 
+    def zrange_generic_by_score(self, reverse, min_, minex, max_, maxex, limit, withscores):
+        """
+        :param reverse:
+        :param min_:
+        :param minex:
+        :param max_:
+        :param maxex:
+        :param limit:
+        :param withscores:
+        :return:
+        """
+        zsl = self.zset.zsl
+        rets = zsl.zsl_range_generic_by_score(reverse=reverse, min_=min_, minex=minex, max_=max_, maxex=maxex,
+                                              limit=limit)
+        result = []
+        for ret in rets:
+            result.append(ZsetNode(ele=ret[0], score=ret[1] if withscores else None))
+        return result
+
     def zrange_generic(self, reverse, start, end, withscores):
         """
         :param reverse:
@@ -59,6 +78,32 @@ class ZsetObj(object):
         #     ln = ln.backward if reverse else ln.level[0].forward
         #     rangelen -= 1
         # return result
+
+    def zrange_by_score(self, min_, minex, max_, maxex, limit=-1, withscores=1):
+        """
+        :param min_:
+        :param minex:
+        :param max_:
+        :param maxex:
+        :param limit:
+        :param withscores:
+        :return:
+        """
+        return self.zrange_generic_by_score(reverse=0, min_=min_, minex=minex, max_=max_, maxex=maxex, limit=limit,
+                                            withscores=withscores)
+
+    def zrevrange_by_score(self, min_, minex, max_, maxex, limit=-1, withscores=1):
+        """
+        :param min_:
+        :param minex:
+        :param max_:
+        :param maxex:
+        :param limit:
+        :param withscores:
+        :return:
+        """
+        return self.zrange_generic_by_score(reverse=1, min_=min_, minex=minex, max_=max_, maxex=maxex, limit=limit,
+                                            withscores=withscores)
 
     def zrange(self, start, end, withscores):
         """
