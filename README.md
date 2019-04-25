@@ -85,7 +85,7 @@ zrevrange_by_score   | O(log(N) + M)
 # Release
 0.3.4 2018-12-04 zadd zincrby zrem zscore zcard zrange zrevrange
 
-0.4.0 2018-12-23 zfloor zlower**_**__**_**
+0.4.0 2018-12-23 zfloor zlower
 
 0.4.1 2019-01-23 shields.io access
 
