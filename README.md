@@ -91,6 +91,8 @@ zrevrange_by_score   | O(log(N) + M)
 
 0.5.0 2019-04-25 zrange_by_score zrevrange_by_score
 
+1.0.0 2020-11-23 stable version released
+
 # License
 MIT
 
