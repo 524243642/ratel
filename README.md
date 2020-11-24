@@ -93,6 +93,8 @@ zrevrange_by_score   | O(log(N) + M)
 
 1.0.0 2020-11-23 stable version released
 
+1.0.1 2020-11-24 python 3.7+ supported
+
 # License
 MIT
 
